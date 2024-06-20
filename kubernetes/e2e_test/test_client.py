@@ -719,6 +719,5 @@ class TestInit(unittest.TestCase):
         temp.print_branches
 
 
-
-
-    
+if __name__ == '__main__':
+    unittest.main()

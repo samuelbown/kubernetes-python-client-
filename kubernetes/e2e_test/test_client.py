@@ -24,6 +24,7 @@ import io
 import gzip
 
 from kubernetes.client.exceptions import TestStr, reset_branches
+from kubernetes.client.models.version_info import TestToDict, reset_branches2
 from kubernetes.client import api_client
 from kubernetes.client.api import core_v1_api
 from kubernetes.e2e_test import base
@@ -641,6 +642,54 @@ class Test(unittest.TestCase):
         print_branches(temp)
         reset_branches()
 
+    def test_first(self): # test if the object has a list
+        temp = TestToDict(openapi_types={"list": ["abc", "def"]}, list=["abc", "def"],temp_to_dict=None, item=None)
+        temp.to_dict()
+
+        self.assertTrue(temp.branch_coverage["first"])
+        self.assertFalse(temp.branch_coverage["second"])
+        self.assertFalse(temp.branch_coverage["third"])
+        self.assertFalse(temp.branch_coverage["fourth"])
+        print_branches(temp)
+        reset_branches2()
+
+    def test_second(self):
+        class temp_to_dict: # test if the object has a to_dict function
+            def to_dict(self):
+                return {"temp": "hello"}
+            
+        temp = TestToDict(openapi_types={"temp_to_dict": "to_dict"}, list=None,temp_to_dict=temp_to_dict(), item=None)
+        temp.to_dict()
+
+        self.assertFalse(temp.branch_coverage["first"])
+        self.assertTrue(temp.branch_coverage["second"])
+        self.assertFalse(temp.branch_coverage["third"])
+        self.assertFalse(temp.branch_coverage["fourth"])
+        print_branches(temp)
+        reset_branches2()
+
+    def test_third(self): # test if the object has a dict structure
+        temp = TestToDict(openapi_types={"openapi_types": "test"}, list=None, temp_to_dict=None, item=None)
+        temp.to_dict()
+        
+        self.assertFalse(temp.branch_coverage["first"])
+        self.assertFalse(temp.branch_coverage["second"])
+        self.assertTrue(temp.branch_coverage["third"])
+        self.assertFalse(temp.branch_coverage["fourth"])
+        print_branches(temp)
+        reset_branches2()
+
+    def test_fourth(self): # test if the object has none of the above
+        temp = TestToDict(openapi_types={"item": "hello!"}, list=None,temp_to_dict=None, item="hello")
+        temp.to_dict()
+        
+        self.assertFalse(temp.branch_coverage["first"])
+        self.assertFalse(temp.branch_coverage["second"])
+        self.assertFalse(temp.branch_coverage["third"])
+        self.assertTrue(temp.branch_coverage["fourth"])
+        print_branches(temp)
+        reset_branches2()
+        
         
 def print_branches(temp):
     for branch in temp.branch_coverage.items():

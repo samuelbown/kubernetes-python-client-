@@ -291,28 +291,8 @@ class VersionInfo(object):
         self._platform = platform
 
     def to_dict(self):
-        """Returns the model properties as a dict"""
-        result = {}
+        return to_dict(self)
 
-        for attr, _ in six.iteritems(self.openapi_types):
-            value = getattr(self, attr)
-            if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
-            elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
-            else:
-                result[attr] = value
-
-        return result
 
     def to_str(self):
         """Returns the string representation of the model"""
@@ -335,3 +315,87 @@ class VersionInfo(object):
             return True
 
         return self.to_dict() != other.to_dict()
+
+def to_dict(self):
+    """Returns the model properties as a dict"""
+    result = {}
+
+    for attr, _ in six.iteritems(self.openapi_types):
+        value = getattr(self, attr)
+        if isinstance(value, list):
+            branch_coverage["first"] = True
+            result[attr] = list(map(
+                lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
+                value
+            ))
+        elif hasattr(value, "to_dict"):
+            branch_coverage["second"] = True
+            result[attr] = value.to_dict()
+        elif isinstance(value, dict):
+            branch_coverage["third"] = True
+            result[attr] = dict(map(
+                lambda item: (item[0], item[1].to_dict())
+                if hasattr(item[1], "to_dict") else item,
+                value.items()
+            ))
+        else:
+            branch_coverage["fourth"] = True
+            result[attr] = value
+
+    return result
+
+branch_coverage = {
+    "first": False,
+    "second": False,
+    "third": False,
+    "fourth": False,
+}
+
+def print_branches():
+    for branch in branch_coverage.items():
+        if branch[1]:
+            print(f"{branch[0]} was executed")
+        else:
+            print(f"{branch[0]} was not executed")
+    print("\n")
+    branch_coverage["first"] = False
+    branch_coverage["second"] = False
+    branch_coverage["third"] = False
+    branch_coverage["fourth"] = False
+
+
+class Test1: # the object has a list
+    def __init__(self, openapi_types):
+        self.list = ["abc", "def"]
+        self.openapi_types = openapi_types
+
+to_dict(Test1({"list": ["abc", "def"]}))
+print_branches()
+
+
+class TempTo_Dict: # the object has a to_dict function
+    def to_dict(self):
+        return {"mock": "data"}
+
+class Test2: 
+    def __init__(self, openapi_types):
+        self.temp_to_dict = TempTo_Dict()
+        self.openapi_types = openapi_types
+
+to_dict(Test2({"temp_to_dict": "to_dict"}))
+print_branches()
+
+class Test3: # the object has a dict structure
+    def __init__(self, openapi_types):
+        self.openapi_types = openapi_types
+
+to_dict(Test3({"openapi_types": "test"}))
+print_branches()
+
+class Test4: # the object none of the above
+    def __init__(self, item, openapi_types):
+        self.item = item
+        self.openapi_types = openapi_types
+
+to_dict(Test4("hello", {"item": "hello!"}))
+print_branches()

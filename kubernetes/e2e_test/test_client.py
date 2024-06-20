@@ -23,8 +23,8 @@ import six
 import io
 import gzip
 
-from kubernetes.client.exceptions import TestStr, reset_branches
 from kubernetes.client.models.version_info import TestToDict, reset_branches2
+from kubernetes.client.exceptions import testApiExceptionInit, testResponse, OpenApiException, TestStr, reset_branches
 from kubernetes.client import api_client
 from kubernetes.client.api import core_v1_api
 from kubernetes.e2e_test import base
@@ -608,6 +608,16 @@ class TestClient(unittest.TestCase):
             self.assertTrue(len(node.metadata.labels) > 0)
             self.assertTrue(isinstance(node.metadata.labels, dict))
 
+def print_branches(temp):
+    for branch in temp.branch_coverage.items():
+        if(branch[1] == True):
+            print(f"{branch[0]} branch was executed")
+        else:
+            print(f"{branch[0]} branch was not executed")
+    print("\n")
+    temp.branch_coverage["headers"] = False
+    temp.branch_coverage["body"] = False
+
 class Test(unittest.TestCase):
 
     def test_headers_and_body(self): # test if headers and body exist
@@ -689,17 +699,24 @@ class Test(unittest.TestCase):
         self.assertTrue(temp.branch_coverage["fourth"])
         print_branches(temp)
         reset_branches2()
+
+
+class TestInit(unittest.TestCase):
+
+    def test_none(self):
+        temp = testApiExceptionInit()
+        self.assertTrue(temp.branch_coverage["second"])
+        self.assertFalse(temp.branch_coverage["first"])
+
+        temp.print_branches
+        temp.reset_branches
+
+    def test_http_resp(self):
+        temp = testApiExceptionInit(1,2,testResponse)
         
-        
-def print_branches(temp):
-    for branch in temp.branch_coverage.items():
-        if(branch[1] == True):
-            print(f"{branch[0]} branch was executed")
-        else:
-            print(f"{branch[0]} branch was not executed")
-    print("\n")
-    temp.branch_coverage["headers"] = False
-    temp.branch_coverage["body"] = False
+        self.assertTrue(temp.branch_coverage["first"])
+        self.assertFalse(temp.branch_coverage["second"])
+        temp.print_branches
 
 
 if __name__ == '__main__':

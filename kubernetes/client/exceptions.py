@@ -12,10 +12,6 @@
 
 import six
 
-branch_coverage = {
-        "headers": False,  
-        "body": False  
-    }
 
 class OpenApiException(Exception):
     """The base exception class for all OpenAPIExceptions"""
@@ -99,51 +95,69 @@ class ApiException(OpenApiException):
             self.body = None
             self.headers = None
 
+def __str__(self):
+    """Custom error messages for exception"""
+    error_message = "({0})\n"\
+                    "Reason: {1}\n".format(self.status, self.reason)
+    
+    if self.headers:
+        branch_coverage["headers"] = True
+        error_message += "HTTP response headers: {0}\n".format(
+            self.headers)
+
+    if self.body:
+        branch_coverage["body"] = True
+        error_message += "HTTP response body: {0}\n".format(self.body)
+
+    return error_message
+
+branch_coverage = {
+        "headers": False,  
+        "body": False  
+    }
+
+def print_branches():
+    for branch in branch_coverage.items():
+        if(branch[1] == True):
+            print(f"{branch[0]} branch was executed")
+        else:
+            print(f"{branch[0]} branch was not executed")
+    print("\n")
+    branch_coverage["headers"] = False
+    branch_coverage["body"] = False
+
+
+class TestStr(Exception):
+    __test__ = False
+
+    branch_coverage = {
+        "headers": False,
+        "body": False
+    }
+
+    def __init__(self, status, reason, headers=None, body=None):
+        self.status = status
+        self.reason = reason
+        self.headers = headers
+        self.body = body
+
     def __str__(self):
         """Custom error messages for exception"""
-        error_message = "({0})\n"\
-                        "Reason: {1}\n".format(self.status, self.reason)
+        error_message = "({0})\nReason: {1}\n".format(self.status, self.reason)
+
         if self.headers:
-            branch_coverage["headers"] = True
-            error_message += "HTTP response headers: {0}\n".format(
-                self.headers)
+            TestStr.branch_coverage["headers"] = True
+            error_message += "HTTP response headers: {0}\n".format(self.headers)
 
         if self.body:
-            branch_coverage["body"] = True
+            TestStr.branch_coverage["body"] = True
             error_message += "HTTP response body: {0}\n".format(self.body)
 
         return error_message
-
-    def print_branches():
-        for branch in branch_coverage.items():
-            if(branch[1] == True):
-                print(f"{branch[0]} was executed")
-            else:
-                print(f"{branch[0]} was not executed")
-        print("\n")
-        branch_coverage["headers"] = False
-        branch_coverage["body"] = False
-
-
-    class Test:
-        def __init__(self, status, reason, headers=None, body=None):
-            self.status = status
-            self.reason = reason
-            self.headers = headers
-            self.body = body
-            
-        
-    __str__(Test(0, 0, "headers" , "body"))
-    print_branches()
     
-    __str__(Test(0, 0, 0, 0))
-    print_branches()
-
-    __str__(Test(0, 0, "headers" ,0))
-    print_branches()
-
-    __str__(Test(0, 0, 0 ,"body"))
-    print_branches()
+def reset_branches():
+    TestStr.branch_coverage["headers"] = False
+    TestStr.branch_coverage["body"] = False
 
 def render_path(path_to_item):
     """Returns a string representation of a path"""

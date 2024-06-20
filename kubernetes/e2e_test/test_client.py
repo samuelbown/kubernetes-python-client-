@@ -23,6 +23,7 @@ import six
 import io
 import gzip
 
+from kubernetes.client.exceptions import TestStr, reset_branches
 from kubernetes.client import api_client
 from kubernetes.client.api import core_v1_api
 from kubernetes.e2e_test import base
@@ -605,3 +606,52 @@ class TestClient(unittest.TestCase):
             node = api.read_node(name=item.metadata.name)
             self.assertTrue(len(node.metadata.labels) > 0)
             self.assertTrue(isinstance(node.metadata.labels, dict))
+
+class Test(unittest.TestCase):
+
+    def test_headers_and_body(self): # test if headers and body exist
+        temp = TestStr(status=0, reason=0, headers="headers", body="body")
+        temp.__str__()
+        self.assertTrue(temp.branch_coverage["headers"])
+        self.assertTrue(temp.branch_coverage["body"])
+        print_branches(temp)
+        reset_branches()
+
+    def test_only_headers(self): # test if only headers exists
+        temp = TestStr(status=0, reason=0, headers="headers", body=None)
+        temp.__str__()
+        self.assertTrue(temp.branch_coverage["headers"])
+        self.assertFalse(temp.branch_coverage["body"])
+        print_branches(temp)
+        reset_branches()
+
+    def test_only_body(self): # test if only body exists
+        temp = TestStr(status=0, reason=0, headers=None, body="body")
+        temp.__str__()
+        self.assertFalse(temp.branch_coverage["headers"])
+        self.assertTrue(temp.branch_coverage["body"])
+        print_branches(temp)
+        reset_branches()
+
+    def test_neither_headers_nor_body(self): # test if neither exists
+        temp = TestStr(status=0, reason=0, headers=None, body=None)
+        temp.__str__()
+        self.assertFalse(temp.branch_coverage["headers"])
+        self.assertFalse(temp.branch_coverage["body"])
+        print_branches(temp)
+        reset_branches()
+
+        
+def print_branches(temp):
+    for branch in temp.branch_coverage.items():
+        if(branch[1] == True):
+            print(f"{branch[0]} branch was executed")
+        else:
+            print(f"{branch[0]} branch was not executed")
+    print("\n")
+    temp.branch_coverage["headers"] = False
+    temp.branch_coverage["body"] = False
+
+
+if __name__ == '__main__':
+    unittest.main()

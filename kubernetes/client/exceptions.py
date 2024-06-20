@@ -81,6 +81,7 @@ class ApiKeyError(OpenApiException, KeyError):
         super(ApiKeyError, self).__init__(full_msg)
 
 
+
 class ApiException(OpenApiException):
 
     def __init__(self, status=None, reason=None, http_resp=None):
@@ -168,3 +169,51 @@ def render_path(path_to_item):
         else:
             result += "['{0}']".format(pth)
     return result
+
+
+
+class testResponse():
+
+    status = 1
+    reason = 2
+    data = 3
+
+    def getheaders():
+        return 4
+    
+class testApiExceptionInit(OpenApiException):
+    __test__ = False
+
+    branch_coverage = {
+        "first": False,  
+        "second": False  
+    }
+
+    def __init__(self, status=None, reason=None, http_resp=None):
+        if http_resp:
+            testApiExceptionInit.branch_coverage["first"] = True
+            testApiExceptionInit.branch_coverage["second"] = False
+            self.status = http_resp.status
+            self.reason = http_resp.reason
+            self.body = http_resp.data
+            self.headers = http_resp.getheaders()
+        else:
+            testApiExceptionInit.branch_coverage["second"] = True
+            testApiExceptionInit.branch_coverage["first"] = False
+            self.status = status
+            self.reason = reason
+            self.body = None
+            self.headers = None
+
+    def print_branches():
+        for branch in testApiExceptionInit.branch_coverage.items():
+            if (branch[1] == True):
+                print(f"{branch[0]} was executed")
+            else :
+                print(f"{branch[0]} was not executed")
+
+    def reset_branches():
+        testApiExceptionInit.branch_coverage["first"] = False
+        testApiExceptionInit.branch_coverage["second"] = False
+
+

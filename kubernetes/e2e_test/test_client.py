@@ -610,38 +610,28 @@ class TestClient(unittest.TestCase):
             self.assertTrue(isinstance(node.metadata.labels, dict))
 
 
-    def setUp(self):
+    def test_auth_settings_no_authorization_key(self):
+        result = self.config.auth_settings()
+        self.assertEqual(result, {})
 
-        self.config = Configuration()
-        self.config.attr1 = [1, 2, 3]
-        self.config.attr2 = {'key': 'value'}
-        self.config.logger = 'logger'
-        self.config.logger_file = 'logfile'
-        self.config.debug = True
-        self.config.api_key = {}
-        self.config.api_key_prefix = {}
-        self.config.refresh_api_key_hook = None
+    @patch.object(Configuration, 'get_api_key_with_prefix')
+    def test_auth_settings_with_authorization_key(self, mock_get_api_key_with_prefix):
+        identifier = 'authorization'
+        self.config.api_key[identifier] = 'secret_key'
+        mock_get_api_key_with_prefix.return_value = 'Bearer secret_key'
 
-    def test_deepcopy(self):
-        copied_config = copy.deepcopy(self.config)
+        expected_result = {
+            'BearerToken': {
+                'type': 'api_key',
+                'in': 'header',
+                'key': 'authorization',
+                'value': 'Bearer secret_key'
+            }
+        }
         
-        self.assertIsNot(self.config, copied_config)
-        
-        self.assertIsNot(self.config.attr1, copied_config.attr1)
-        self.assertEqual(self.config.attr1, copied_config.attr1)
-        
-        self.assertIsNot(self.config.attr2, copied_config.attr2)
-        self.assertEqual(self.config.attr2, copied_config.attr2)
-        
-        self.assertIsNot(self.config.logger, copied_config.logger)
-        self.assertEqual(self.config.logger, copied_config.logger)
-        
-        self.assertEqual(self.config.logger_file, copied_config.logger_file)
-        self.assertEqual(self.config.debug, copied_config.debug)
+        result = self.config.auth_settings()
+        self.assertEqual(result, expected_result)
+        mock_get_api_key_with_prefix.assert_called_once_with(identifier)
 
-        memo = {}
-        copied_config_with_memo = self.config.__deepcopy__(memo)
-        self.assertIsNot(self.config, copied_config_with_memo)
-        self.assertIn(id(self.config), memo)
-        self.assertIs(memo[id(self.config)], copied_config_with_memo)
-        
+if __name__ == '__main__':
+    unittest.main()

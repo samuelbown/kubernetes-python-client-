@@ -22,15 +22,16 @@ import uuid
 import six
 import io
 import gzip
+import copy
 
-from kubernetes.client.models.version_info import TestToDict, reset_branches2
-from kubernetes.client.exceptions import testApiExceptionInit, testResponse, OpenApiException, TestStr, reset_branches
+from unittest.mock import Mock, patch
 from kubernetes.client import api_client
 from kubernetes.client.api import core_v1_api
 from kubernetes.e2e_test import base
 from kubernetes.stream import stream, portforward
 from kubernetes.stream.ws_client import ERROR_CHANNEL
 from kubernetes.client.rest import ApiException
+from kubernetes.client.configuration import Configuration
 
 import six.moves.urllib.request as urllib_request
 
@@ -608,116 +609,39 @@ class TestClient(unittest.TestCase):
             self.assertTrue(len(node.metadata.labels) > 0)
             self.assertTrue(isinstance(node.metadata.labels, dict))
 
-def print_branches(temp):
-    for branch in temp.branch_coverage.items():
-        if(branch[1] == True):
-            print(f"{branch[0]} branch was executed")
-        else:
-            print(f"{branch[0]} branch was not executed")
-    print("\n")
-    temp.branch_coverage["headers"] = False
-    temp.branch_coverage["body"] = False
 
-class Test(unittest.TestCase):
+    def setUp(self):
 
-    def test_headers_and_body(self): # test if headers and body exist
-        temp = TestStr(status=0, reason=0, headers="headers", body="body")
-        temp.__str__()
-        self.assertTrue(temp.branch_coverage["headers"])
-        self.assertTrue(temp.branch_coverage["body"])
-        print_branches(temp)
-        reset_branches()
+        self.config = Configuration()
+        self.config.attr1 = [1, 2, 3]
+        self.config.attr2 = {'key': 'value'}
+        self.config.logger = 'logger'
+        self.config.logger_file = 'logfile'
+        self.config.debug = True
+        self.config.api_key = {}
+        self.config.api_key_prefix = {}
+        self.config.refresh_api_key_hook = None
 
-    def test_only_headers(self): # test if only headers exists
-        temp = TestStr(status=0, reason=0, headers="headers", body=None)
-        temp.__str__()
-        self.assertTrue(temp.branch_coverage["headers"])
-        self.assertFalse(temp.branch_coverage["body"])
-        print_branches(temp)
-        reset_branches()
-
-    def test_only_body(self): # test if only body exists
-        temp = TestStr(status=0, reason=0, headers=None, body="body")
-        temp.__str__()
-        self.assertFalse(temp.branch_coverage["headers"])
-        self.assertTrue(temp.branch_coverage["body"])
-        print_branches(temp)
-        reset_branches()
-
-    def test_neither_headers_nor_body(self): # test if neither exists
-        temp = TestStr(status=0, reason=0, headers=None, body=None)
-        temp.__str__()
-        self.assertFalse(temp.branch_coverage["headers"])
-        self.assertFalse(temp.branch_coverage["body"])
-        print_branches(temp)
-        reset_branches()
-
-    def test_first(self): # test if the object has a list
-        temp = TestToDict(openapi_types={"list": ["abc", "def"]}, list=["abc", "def"],temp_to_dict=None, item=None)
-        temp.to_dict()
-
-        self.assertTrue(temp.branch_coverage["first"])
-        self.assertFalse(temp.branch_coverage["second"])
-        self.assertFalse(temp.branch_coverage["third"])
-        self.assertFalse(temp.branch_coverage["fourth"])
-        print_branches(temp)
-        reset_branches2()
-
-    def test_second(self):
-        class temp_to_dict: # test if the object has a to_dict function
-            def to_dict(self):
-                return {"temp": "hello"}
-            
-        temp = TestToDict(openapi_types={"temp_to_dict": "to_dict"}, list=None,temp_to_dict=temp_to_dict(), item=None)
-        temp.to_dict()
-
-        self.assertFalse(temp.branch_coverage["first"])
-        self.assertTrue(temp.branch_coverage["second"])
-        self.assertFalse(temp.branch_coverage["third"])
-        self.assertFalse(temp.branch_coverage["fourth"])
-        print_branches(temp)
-        reset_branches2()
-
-    def test_third(self): # test if the object has a dict structure
-        temp = TestToDict(openapi_types={"openapi_types": "test"}, list=None, temp_to_dict=None, item=None)
-        temp.to_dict()
+    def test_deepcopy(self):
+        copied_config = copy.deepcopy(self.config)
         
-        self.assertFalse(temp.branch_coverage["first"])
-        self.assertFalse(temp.branch_coverage["second"])
-        self.assertTrue(temp.branch_coverage["third"])
-        self.assertFalse(temp.branch_coverage["fourth"])
-        print_branches(temp)
-        reset_branches2()
-
-    def test_fourth(self): # test if the object has none of the above
-        temp = TestToDict(openapi_types={"item": "hello!"}, list=None,temp_to_dict=None, item="hello")
-        temp.to_dict()
+        self.assertIsNot(self.config, copied_config)
         
-        self.assertFalse(temp.branch_coverage["first"])
-        self.assertFalse(temp.branch_coverage["second"])
-        self.assertFalse(temp.branch_coverage["third"])
-        self.assertTrue(temp.branch_coverage["fourth"])
-        print_branches(temp)
-        reset_branches2()
-
-
-class TestInit(unittest.TestCase):
-
-    def test_none(self):
-        temp = testApiExceptionInit()
-        self.assertTrue(temp.branch_coverage["second"])
-        self.assertFalse(temp.branch_coverage["first"])
-
-        temp.print_branches
-        temp.reset_branches
-
-    def test_http_resp(self):
-        temp = testApiExceptionInit(1,2,testResponse)
+        self.assertIsNot(self.config.attr1, copied_config.attr1)
+        self.assertEqual(self.config.attr1, copied_config.attr1)
         
-        self.assertTrue(temp.branch_coverage["first"])
-        self.assertFalse(temp.branch_coverage["second"])
-        temp.print_branches
+        self.assertIsNot(self.config.attr2, copied_config.attr2)
+        self.assertEqual(self.config.attr2, copied_config.attr2)
+        
+        self.assertIsNot(self.config.logger, copied_config.logger)
+        self.assertEqual(self.config.logger, copied_config.logger)
+        
+        self.assertEqual(self.config.logger_file, copied_config.logger_file)
+        self.assertEqual(self.config.debug, copied_config.debug)
 
-
-if __name__ == '__main__':
-    unittest.main()
+        memo = {}
+        copied_config_with_memo = self.config.__deepcopy__(memo)
+        self.assertIsNot(self.config, copied_config_with_memo)
+        self.assertIn(id(self.config), memo)
+        self.assertIs(memo[id(self.config)], copied_config_with_memo)
+        

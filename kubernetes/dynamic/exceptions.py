@@ -44,6 +44,12 @@ def api_exception(e):
 
 class DynamicApiError(ApiException):
     """ Generic API Error for the dynamic client """
+    branch_coverage = {
+        "headers": False,
+        "body": False,
+        "traceback": False,
+    }
+
     def __init__(self, e, tb=None):
         self.status = e.status
         self.reason = e.reason
@@ -52,18 +58,33 @@ class DynamicApiError(ApiException):
         self.original_traceback = tb
 
     def __str__(self):
+
         error_message = [str(self.status), "Reason: {}".format(self.reason)]
         if self.headers:
+            self.branch_coverage["headers"] = True
             error_message.append("HTTP response headers: {}".format(self.headers))
 
         if self.body:
+            self.branch_coverage["body"] = True
             error_message.append("HTTP response body: {}".format(self.body))
 
         if self.original_traceback:
+            self.branch_coverage["traceback"] = True
             error_message.append("Original traceback: \n{}".format(self.original_traceback))
 
         return '\n'.join(error_message)
+    
+    def print_branches(self):
 
+        for branch in self.branch_coverage.items():
+            if (branch[1] == True):
+                print(f"{branch[0]} was executed")
+            else :
+             print(f"{branch[0]} was not executed")
+        print("\n")
+        self.branch_coverage["headers"] = False
+        self.branch_coverage["body"] = False
+        self.branch_coverage["traceback"] = False
     def summary(self):
         if self.body:
             if self.headers and self.headers.get('Content-Type') == 'application/json':
@@ -108,3 +129,52 @@ class ServiceUnavailableError(DynamicApiError):
     """ 503: StatusServiceUnavailable """
 class ServerTimeoutError(DynamicApiError):
     """ 504: StatusServerTimeout """
+
+class TestDynamicApiErrorStr(ApiException):
+    """ Generic API Error for the dynamic client """
+
+    branch_coverage = {
+        "headers": False,
+        "body": False,
+        "traceback": False,
+    }
+
+    def __init__(self, status=None, reason=None, body=None, headers=None, tb=None):
+        
+        self.status = status
+        self.reason = reason
+        self.body = body
+        self.headers = headers
+        self.original_traceback = tb
+
+    def __str__(self):
+
+        error_message = [str(self.status), "Reason: {}".format(self.reason)]
+        if self.headers:
+            self.branch_coverage["headers"] = True
+            error_message.append("HTTP response headers: {}".format(self.headers))
+
+        if self.body:
+            self.branch_coverage["body"] = True
+            error_message.append("HTTP response body: {}".format(self.body))
+
+        if self.original_traceback:
+            self.branch_coverage["traceback"] = True
+            error_message.append("Original traceback: \n{}".format(self.original_traceback))
+
+        return '\n'.join(error_message)
+    
+
+
+
+    def print_branches(self):
+
+        for branch in self.branch_coverage.items():
+            if (branch[1] == True):
+                print(f"{branch[0]} was executed")
+            else :
+             print(f"{branch[0]} was not executed")
+        print("\n")
+        self.branch_coverage["headers"] = False
+        self.branch_coverage["body"] = False
+        self.branch_coverage["traceback"] = False

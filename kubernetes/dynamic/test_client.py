@@ -21,7 +21,7 @@ from kubernetes.client import api_client
 
 from . import DynamicClient
 from .resource import ResourceInstance, ResourceField
-from .exceptions import ResourceNotFoundError
+from .exceptions import ResourceNotFoundError, TestDynamicApiErrorStr
 
 
 def short_uuid():
@@ -569,3 +569,45 @@ class TestDynamicClientSerialization(unittest.TestCase):
         self.assertEqual(res["foo"], params["foo"])
         self.assertEqual(res["self"], params["self"])
         self.assertEqual(self.client.serialize_body(res), params)
+
+class TestStr(unittest.TestCase):
+    def testNone(self):
+        temp = TestDynamicApiErrorStr(status=1,reason=2,body=None,headers=None,tb=None)
+        temp.__str__()
+        self.assertFalse(temp.branch_coverage["headers"])
+        self.assertFalse(temp.branch_coverage["body"])
+        self.assertFalse(temp.branch_coverage["traceback"])
+        temp.print_branches()
+
+    def testHeaders(self):
+        temp = TestDynamicApiErrorStr(status=1,reason=2,body=None,headers=3, tb=None)
+        temp.__str__()
+        self.assertTrue(temp.branch_coverage["headers"])
+        self.assertFalse(temp.branch_coverage["body"])
+        self.assertFalse(temp.branch_coverage["traceback"])
+        temp.print_branches()
+
+    def testbody(self):
+        temp = TestDynamicApiErrorStr(status=1,reason=2,body=3)
+        temp.__str__()
+        self.assertFalse(temp.branch_coverage["headers"])
+        self.assertTrue(temp.branch_coverage["body"])
+        self.assertFalse(temp.branch_coverage["traceback"])
+        temp.print_branches()
+
+    def testTraceback(self):
+        temp = TestDynamicApiErrorStr(status=1,reason=2,body=None,headers=None,tb=3)
+        temp.__str__()
+        self.assertFalse(temp.branch_coverage["headers"])
+        self.assertFalse(temp.branch_coverage["body"])
+        self.assertTrue(temp.branch_coverage["traceback"])
+        temp.print_branches()
+
+    def testAll(self):
+        temp = TestDynamicApiErrorStr(status=1,reason=2,body=3,headers=4,tb=5)
+        temp.__str__()
+        self.assertTrue(temp.branch_coverage["headers"])
+        self.assertTrue(temp.branch_coverage["body"])
+        self.assertTrue(temp.branch_coverage["traceback"])
+        
+        temp.print_branches()

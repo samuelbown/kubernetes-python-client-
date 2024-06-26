@@ -22,16 +22,17 @@ import uuid
 import six
 import io
 import gzip
-import copy
 
-from unittest.mock import Mock, patch
+from kubernetes.client.configuration import Configuration, TestGetApiWithKey
 from kubernetes.client import api_client
 from kubernetes.client.api import core_v1_api
 from kubernetes.e2e_test import base
 from kubernetes.stream import stream, portforward
 from kubernetes.stream.ws_client import ERROR_CHANNEL
 from kubernetes.client.rest import ApiException
-from kubernetes.client.configuration import Configuration
+from kubernetes.client.models.admissionregistration_v1_service_reference import TestInit, AdmissionregistrationV1ServiceReference
+from unittest.mock import MagicMock
+from kubernetes.client.models.version_info import VersionInfo
 
 import six.moves.urllib.request as urllib_request
 
@@ -609,39 +610,102 @@ class TestClient(unittest.TestCase):
             self.assertTrue(len(node.metadata.labels) > 0)
             self.assertTrue(isinstance(node.metadata.labels, dict))
 
+class TestAdmission(unittest.TestCase):
+    def test_no_branches_taken(self):
+        AdmissionregistrationV1ServiceReference(name="", namespace="", path=None, port=None, local_vars_configuration=Configuration())
+        temp = TestInit()
+        self.assertFalse(temp.branch_coverage["first"])
+        self.assertFalse(temp.branch_coverage["second"])
+        self.assertFalse(temp.branch_coverage["third"])
+        temp.print_branches()
+        temp.reset_branches() 
+    
+    def test_first_branch_taken(self):
+        AdmissionregistrationV1ServiceReference(name="", namespace="", path=None, port=None, local_vars_configuration=None)
+        temp = TestInit()
+        self.assertTrue(temp.branch_coverage["first"])
+        self.assertFalse(temp.branch_coverage["second"])
+        self.assertFalse(temp.branch_coverage["third"])
+        temp.print_branches()
+        temp.reset_branches() 
+    
+    def test_second_branch_taken(self):
+        AdmissionregistrationV1ServiceReference(name="", namespace="", path="path", port=None, local_vars_configuration=Configuration())
+        temp = TestInit()
+        self.assertFalse(temp.branch_coverage["first"])
+        self.assertTrue(temp.branch_coverage["second"])
+        self.assertFalse(temp.branch_coverage["third"])
+        temp.print_branches()
+        temp.reset_branches() 
+    
+    def test_third_branch_taken(self):
+        AdmissionregistrationV1ServiceReference(name="", namespace="", path=None, port="port", local_vars_configuration=Configuration())
+        temp = TestInit()
+        self.assertFalse(temp.branch_coverage["first"])
+        self.assertFalse(temp.branch_coverage["second"])
+        self.assertTrue(temp.branch_coverage["third"])
+        temp.print_branches()
+        temp.reset_branches() 
 
-    def setUp(self):
+    def test_all_branches_taken(self):
+        AdmissionregistrationV1ServiceReference(name="", namespace="", path="path", port="port", local_vars_configuration=None)
+        temp = TestInit()
+        self.assertTrue(temp.branch_coverage["first"])
+        self.assertTrue(temp.branch_coverage["second"])
+        self.assertTrue(temp.branch_coverage["third"])
+        temp.print_branches()
+        temp.reset_branches()
 
-        self.config = Configuration()
-        self.config.attr1 = [1, 2, 3]
-        self.config.attr2 = {'key': 'value'}
-        self.config.logger = 'logger'
-        self.config.logger_file = 'logfile'
-        self.config.debug = True
-        self.config.api_key = {}
-        self.config.api_key_prefix = {}
-        self.config.refresh_api_key_hook = None
+class TestApi(unittest.TestCase):
+    def test_no_branches_entered(self):
+        Configuration.get_api_key_with_prefix(Configuration(api_key=None), "identifier")
+        temp = TestGetApiWithKey()
+        self.assertFalse(temp.branch_coverage["hook"])
+        self.assertFalse(temp.branch_coverage["key"])
+        self.assertFalse(temp.branch_coverage["prefix"])
+        self.assertFalse(temp.branch_coverage["else"])
+        temp.print_branches()
+        temp.reset_branches() 
 
-    def test_deepcopy(self):
-        copied_config = copy.deepcopy(self.config)
+    def dummy_refresh_api_key_hook(config):
+        config.api_key["key"] = "newval"
         
-        self.assertIsNot(self.config, copied_config)
-        
-        self.assertIsNot(self.config.attr1, copied_config.attr1)
-        self.assertEqual(self.config.attr1, copied_config.attr1)
-        
-        self.assertIsNot(self.config.attr2, copied_config.attr2)
-        self.assertEqual(self.config.attr2, copied_config.attr2)
-        
-        self.assertIsNot(self.config.logger, copied_config.logger)
-        self.assertEqual(self.config.logger, copied_config.logger)
-        
-        self.assertEqual(self.config.logger_file, copied_config.logger_file)
-        self.assertEqual(self.config.debug, copied_config.debug)
+    def test_hook_entered(self):
+        config = Configuration(api_key={"key": "value"}, api_key_prefix={"key": "prefix"})
+        config.refresh_api_key_hook = TestApi.dummy_refresh_api_key_hook  
+        config.get_api_key_with_prefix("key")
+        temp = TestGetApiWithKey()
+        self.assertTrue(temp.branch_coverage["hook"])
+        self.assertTrue(temp.branch_coverage["key"])
+        self.assertTrue(temp.branch_coverage["prefix"])
+        self.assertFalse(temp.branch_coverage["else"])
+        temp.print_branches()
+        temp.reset_branches() 
 
-        memo = {}
-        copied_config_with_memo = self.config.__deepcopy__(memo)
-        self.assertIsNot(self.config, copied_config_with_memo)
-        self.assertIn(id(self.config), memo)
-        self.assertIs(memo[id(self.config)], copied_config_with_memo)
-        
+    def test_key_and_prefix_entered(self):
+        config = Configuration(api_key={"key": "value"}, api_key_prefix={"key": "value"})
+        config.refresh_api_key_hook = None
+        config.get_api_key_with_prefix("key")
+        temp = TestGetApiWithKey()
+        self.assertFalse(temp.branch_coverage["hook"])
+        self.assertTrue(temp.branch_coverage["key"])
+        self.assertTrue(temp.branch_coverage["prefix"])
+        self.assertFalse(temp.branch_coverage["else"])
+        temp.print_branches()
+        temp.reset_branches() 
+
+    def test_key_and_else_entered(self):
+        config = Configuration(api_key={"key": "value"}, api_key_prefix=None)
+        config.refresh_api_key_hook = None
+        config.get_api_key_with_prefix("key")
+        temp = TestGetApiWithKey()
+        self.assertFalse(temp.branch_coverage["hook"])
+        self.assertTrue(temp.branch_coverage["key"])
+        self.assertFalse(temp.branch_coverage["prefix"])
+        self.assertTrue(temp.branch_coverage["else"])
+        temp.print_branches()
+        temp.reset_branches() 
+
+
+if __name__ == '__main__':
+    unittest.main()

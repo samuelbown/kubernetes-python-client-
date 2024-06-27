@@ -278,14 +278,17 @@ This function had 2 if statements, one of them containing a separate if-else sta
 ### Overall
 
 Old coverage results:
+
 ![initial coverage](https://i.ibb.co/Jky0PS5/Figure-1.png "initial coverage")
 
 Figure 26: Coverage results with no tests implemented
 
 New coverage results:
+
 ![fig27](https://i.ibb.co/1vkTRb8/figure-27.png "fig27")
 
 Figure 27: Coverage results with all tests implemented
+
 ## Statement of individual contributions
 
 We had several group meetings to organize what each group member would do. Each group member worked on both parts of the assignment on their own, asking questions if they needed help. Some members had issues with making their tests, so we worked together as a group to help each other. In the end everyone in the group can agree that the work we did was equal, which was the goal that we were striving for.

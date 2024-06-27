@@ -110,7 +110,7 @@ Patch (diff) or a link to a commit made in your forked repository that shows the
 https://github.com/samuelbown/kubernetes-python-client-/commit/7afea5a19169b195e2c7b19a37586b2bbd608e68
 
 
-<img src="https://i.ibb.co/3r1Ryks/figure-8.png" width="350" height="500">
+![fig8](https://i.imghippo.com/files/eUX9c1719500597.png "fig8")
 
 Figure 8: Coverage tool results for __init__
 
@@ -237,7 +237,7 @@ https://github.com/samuelbown/kubernetes-python-client-/commit/4d11ddfc34f9d249c
 
 Figure 20: Coverage results before the __init__ tests were implemented
 
-![fig21](https://i.ibb.co/JpXmFqc/figure-21.png "fig21")
+![fig21](https://i.imghippo.com/files/oLipw1719500664.png "fig21")
 
 Figure 21: Coverage results after the __init__ tests were implemented
 

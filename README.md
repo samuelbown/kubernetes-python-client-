@@ -1,4 +1,3 @@
-# Report for Assignment 1
 
 ## Project chosen
 
@@ -38,8 +37,8 @@ Patch (diff) or a link to a commit made in your forked repository that shows the
 
 https://github.com/samuelbown/kubernetes-python-client-/commit/01f1e191d0396d937b2ecd63dec424571fee44c6
 
-![fig2](https://i.ibb.co/qdh64BC/Figure-2.png "fig2")
 
+<img src="https://i.ibb.co/qdh64BC/Figure-2.png" width="400" height="400">
 Figure 2: Coverage tool results for __str__
 
 Function 2: “to_dict”
@@ -48,7 +47,8 @@ Patch (diff) or a link to a commit made in your forked repository that shows the
 
 https://github.com/samuelbown/kubernetes-python-client-/commit/ed7734564a1c1e242926f01c7e1bc15a701dae55
 
-![fig3](https://i.ibb.co/JKDtRZq/figure3.png "fig3")
+<img src="https://i.ibb.co/JKDtRZq/figure3.png" width="350" height="500">
+
 
 Figure 3: Coverage tool results for to_dict
 
@@ -106,7 +106,8 @@ Patch (diff) or a link to a commit made in your forked repository that shows the
 
 https://github.com/samuelbown/kubernetes-python-client-/commit/7afea5a19169b195e2c7b19a37586b2bbd608e68
 
-![fig8](https://i.ibb.co/3r1Ryks/figure-8.png "fig8")
+
+<img src="https://i.ibb.co/3r1Ryks/figure-8.png" width="350" height="500">
 
 Figure 8: Coverage tool results for __init__
 
@@ -278,18 +279,14 @@ This function had 2 if statements, one of them containing a separate if-else sta
 ### Overall
 
 Old coverage results:
-
 ![initial coverage](https://i.ibb.co/Jky0PS5/Figure-1.png "initial coverage")
 
 Figure 26: Coverage results with no tests implemented
 
 New coverage results:
-
 ![fig27](https://i.ibb.co/1vkTRb8/figure-27.png "fig27")
 
 Figure 27: Coverage results with all tests implemented
-
 ## Statement of individual contributions
 
 We had several group meetings to organize what each group member would do. Each group member worked on both parts of the assignment on their own, asking questions if they needed help. Some members had issues with making their tests, so we worked together as a group to help each other. In the end everyone in the group can agree that the work we did was equal, which was the goal that we were striving for.
-

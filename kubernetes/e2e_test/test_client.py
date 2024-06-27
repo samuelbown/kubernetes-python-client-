@@ -33,6 +33,8 @@ from kubernetes.client.rest import ApiException
 from kubernetes.client.models.admissionregistration_v1_service_reference import TestInit, AdmissionregistrationV1ServiceReference
 from unittest.mock import MagicMock
 from kubernetes.client.models.version_info import VersionInfo
+from kubernetes.client.models.v1_component_status import V1ComponentStatus
+from kubernetes.client.models.v2_metric_target import V2MetricTarget
 
 import six.moves.urllib.request as urllib_request
 
@@ -705,6 +707,168 @@ class TestApi(unittest.TestCase):
         self.assertTrue(temp.branch_coverage["else"])
         temp.print_branches()
         temp.reset_branches() 
+
+
+
+
+class V1StatusTests(unittest.TestCase):
+
+
+    def testNone(self):
+        temp = V1ComponentStatus
+        temp.reset_branches(temp)
+        temp.__init__(temp,api_version=None,conditions=None,kind=None,metadata=None,local_vars_configuration=Configuration())
+
+        self.assertFalse(temp.branch_coverage["api_version"])
+        self.assertFalse(temp.branch_coverage["conditions"])
+        self.assertFalse(temp.branch_coverage["kind"])
+        self.assertFalse(temp.branch_coverage["metadata"])
+        self.assertFalse(temp.branch_coverage["local_vars"])
+
+        temp.print_branches(temp)
+
+    def testApi(self):
+        temp = V1ComponentStatus
+        temp.reset_branches(temp)
+        temp.reset_branches(temp)
+        temp.__init__(temp,api_version="api_version",conditions=None,kind=None,metadata=None,local_vars_configuration=Configuration())
+
+        self.assertTrue(temp.branch_coverage["api_version"])
+        self.assertFalse(temp.branch_coverage["conditions"])
+        self.assertFalse(temp.branch_coverage["kind"])
+        self.assertFalse(temp.branch_coverage["metadata"])
+        self.assertFalse(temp.branch_coverage["local_vars"])
+
+        temp.print_branches(temp)
+
+    def testConditions(self):
+        temp = V1ComponentStatus
+        temp.reset_branches(temp)
+        temp.__init__(temp,api_version=None,conditions="conditions",kind=None,metadata=None,local_vars_configuration=Configuration())
+
+        self.assertFalse(temp.branch_coverage["api_version"])
+        self.assertTrue(temp.branch_coverage["conditions"])
+        self.assertFalse(temp.branch_coverage["kind"])
+        self.assertFalse(temp.branch_coverage["metadata"])
+        self.assertFalse(temp.branch_coverage["local_vars"])
+
+        temp.print_branches(temp)
+    
+    def testKind(self):
+        temp = V1ComponentStatus
+        temp.reset_branches(temp)
+        temp.__init__(temp,api_version=None,conditions=None,kind="Kind",metadata=None,local_vars_configuration=Configuration())
+
+        self.assertFalse(temp.branch_coverage["api_version"])
+        self.assertFalse(temp.branch_coverage["conditions"])
+        self.assertTrue(temp.branch_coverage["kind"])
+        self.assertFalse(temp.branch_coverage["metadata"])
+        self.assertFalse(temp.branch_coverage["local_vars"])
+
+        temp.print_branches(temp)
+
+    def testMetadata(self):
+        temp = V1ComponentStatus
+        temp.reset_branches(temp)
+        temp.__init__(temp,api_version=None,conditions=None,kind=None,metadata="metadata",local_vars_configuration=Configuration())
+
+        self.assertFalse(temp.branch_coverage["api_version"])
+        self.assertFalse(temp.branch_coverage["conditions"])
+        self.assertFalse(temp.branch_coverage["kind"])
+        self.assertTrue(temp.branch_coverage["metadata"])
+        self.assertFalse(temp.branch_coverage["local_vars"])
+
+        temp.print_branches(temp)
+
+    def testLocalVars(self):
+        temp = V1ComponentStatus
+        temp.reset_branches(temp)
+        temp.__init__(temp,api_version=None,conditions=None,kind=None,metadata=None,local_vars_configuration=None)
+
+        self.assertFalse(temp.branch_coverage["api_version"])
+        self.assertFalse(temp.branch_coverage["conditions"])
+        self.assertFalse(temp.branch_coverage["kind"])
+        self.assertFalse(temp.branch_coverage["metadata"])
+        self.assertTrue(temp.branch_coverage["local_vars"])
+
+        temp.print_branches(temp)
+
+    def testAll(self):
+        temp = V1ComponentStatus
+        temp.reset_branches(temp)
+        temp.__init__(temp,api_version="api_version",conditions="conditions",kind="Kind",metadata="metadata",local_vars_configuration=None)
+        
+        self.assertTrue(temp.branch_coverage["api_version"])
+        self.assertTrue(temp.branch_coverage["conditions"])
+        self.assertTrue(temp.branch_coverage["kind"])
+        self.assertTrue(temp.branch_coverage["metadata"])
+        self.assertTrue(temp.branch_coverage["local_vars"])
+        
+        temp.print_branches(temp)
+
+class v2MetricTargetTests(unittest.TestCase):
+    def testNone(self):
+        temp = V2MetricTarget
+        temp.reset_branches(temp)
+        temp.__init__(temp,None,None,None,None,Configuration())
+
+        self.assertFalse(temp.branch_coverage["average_utilization"])
+        self.assertFalse(temp.branch_coverage["average_value"])
+        self.assertFalse(temp.branch_coverage["value"])
+        self.assertFalse(temp.branch_coverage["local_vars"])
+
+        temp.print_branches(temp)
+
+    def testUtil(self):
+        temp = V2MetricTarget
+        temp.reset_branches(temp)
+        temp.__init__(temp,"util",None,None,None,Configuration())
+
+        self.assertTrue(temp.branch_coverage["average_utilization"])
+        self.assertFalse(temp.branch_coverage["average_value"])
+        self.assertFalse(temp.branch_coverage["value"])
+        self.assertFalse(temp.branch_coverage["local_vars"])
+
+    def testAvgValue(self):
+        temp = V2MetricTarget
+        temp.reset_branches(temp)
+        temp.__init__(temp,None,"avg_value",None,None,Configuration())
+
+        self.assertFalse(temp.branch_coverage["average_utilization"])
+        self.assertTrue(temp.branch_coverage["average_value"])
+        self.assertFalse(temp.branch_coverage["value"])
+        self.assertFalse(temp.branch_coverage["local_vars"])
+
+    def testValue(self):
+        temp = V2MetricTarget
+        temp.reset_branches(temp)
+        temp.__init__(temp,None,None,None,"value",Configuration())
+
+        self.assertFalse(temp.branch_coverage["average_utilization"])
+        self.assertFalse(temp.branch_coverage["average_value"])
+        self.assertTrue(temp.branch_coverage["value"])
+        self.assertFalse(temp.branch_coverage["local_vars"])
+
+    def testVars(self):
+        temp = V2MetricTarget
+        temp.reset_branches(temp)
+        temp.__init__(temp,None,None,None,None,None)
+
+        self.assertFalse(temp.branch_coverage["average_utilization"])
+        self.assertFalse(temp.branch_coverage["average_value"])
+        self.assertFalse(temp.branch_coverage["value"])
+        self.assertTrue(temp.branch_coverage["local_vars"])
+
+    def testAll(self):
+        temp = V2MetricTarget
+        temp.reset_branches(temp)
+        temp.__init__(temp,"average_utilization","average_value",None,"value",None)
+
+        self.assertTrue(temp.branch_coverage["average_utilization"])
+        self.assertTrue(temp.branch_coverage["average_value"])
+        self.assertTrue(temp.branch_coverage["value"])
+        self.assertTrue(temp.branch_coverage["local_vars"])
+
 
 
 if __name__ == '__main__':

@@ -61,7 +61,7 @@ Function 1: ApiException “__Init__”
 
 Patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements:
 
-https://github.com/samuelbown/kubernetes-python-client-/commit/2f87f80baf489005b1ee9b1be3d607ff1968c370
+https://github.com/samuelbown/kubernetes-python-client-/commit/8c1af89670033b8a97f642e01d10c742302cc8ae
 
 ![fig4](https://i.ibb.co/pnT20fx/figure-4.png "fig4")
 
@@ -71,7 +71,7 @@ Function 2: DynamicApiError “__str__”
 
 Patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements:
 
-https://github.com/samuelbown/kubernetes-python-client-/commit/8683deee50982506fa3bd6853dc80b167c540d7b
+https://github.com/samuelbown/kubernetes-python-client-/commit/b42215a95b4495f2a5815f013bb77e87aaf8785e
 
 ![fig5](https://i.ibb.co/nbrJ6ws/figure-5.png "fig5")
 
@@ -177,7 +177,7 @@ Name: Andreas
 
 Patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test:
 
-https://github.com/samuelbown/kubernetes-python-client-/commit/28e697bd5dc61b4f87bfe92963e7564f13c24bd4
+https://github.com/samuelbown/kubernetes-python-client-/commit/9de3209f0f21938a0e799918cd77282a54b014b5
 
 ![fig14](https://i.ibb.co/4sN06Zy/figure-14.png "fig14")
 
@@ -194,7 +194,7 @@ The coverage of test_client, where the test is, has increased by 3%. There was a
 
 Patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test:
 
-https://github.com/samuelbown/kubernetes-python-client-/compare/master...dynamic-__str__-tests
+https://github.com/samuelbown/kubernetes-python-client-/commit/fd1d1f756f8dddb4d8950b2d30b2a44e2c9a6cd3
 
 ![fig16](https://i.ibb.co/YXsdqhn/figure-16.png "fig16")
 
@@ -292,4 +292,13 @@ New coverage results:
 Figure 27: Coverage results with all tests implemented
 ## Statement of individual contributions
 
-We had several group meetings to organize what each group member would do. Each group member worked on both parts of the assignment on their own, asking questions if they needed help. Some members had issues with making their tests, so we worked together as a group to help each other. In the end everyone in the group can agree that the work we did was equal, which was the goal that we were striving for.
+
+Samuel: Worked on my part 1 and 2 of the assignment by instrumenting a function to check the branch coverage and making tests to try and increase the coverage. Created the GitHub and helped format the document.
+
+Andreas:instrumented 2 functions for part 1 of the assignment and made tests for them in part 2.
+
+Amelia: Helped install and use coverage.py and worked on my assigned part 1 and 2, increasing coverage for 2 functions, and creating my own coverage tool to check them. 
+
+Chirag: Implemented the coverage tests and increased coverage for my 2 functions as well as contributed in writing the document.
+
+All in all, everyone in the group was striving for an even amount of work. We were communicating constantly, whether that be planning when we wanted to finish certain parts of the assignment or helping each other with issues. We also all cooperated on creating the README file. 

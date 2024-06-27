@@ -39,6 +39,7 @@ https://github.com/samuelbown/kubernetes-python-client-/commit/01f1e191d0396d937
 
 
 <img src="https://i.ibb.co/qdh64BC/Figure-2.png" width="400" height="400">
+![fig2](https://www.imghippo.com/i/OCaa71719500198.png "fig2")
 Figure 2: Coverage tool results for __str__
 
 Function 2: “to_dict”
@@ -48,6 +49,7 @@ Patch (diff) or a link to a commit made in your forked repository that shows the
 https://github.com/samuelbown/kubernetes-python-client-/commit/ed7734564a1c1e242926f01c7e1bc15a701dae55
 
 <img src="https://i.ibb.co/JKDtRZq/figure3.png" width="350" height="500">
+
 
 
 Figure 3: Coverage tool results for to_dict

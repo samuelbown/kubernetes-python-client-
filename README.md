@@ -1,232 +1,304 @@
-# Kubernetes Python Client
 
-[![Build Status](https://travis-ci.org/kubernetes-client/python.svg?branch=master)](https://travis-ci.org/kubernetes-client/python)
-[![PyPI version](https://badge.fury.io/py/kubernetes.svg)](https://badge.fury.io/py/kubernetes)
-[![codecov](https://codecov.io/gh/kubernetes-client/python/branch/master/graph/badge.svg)](https://codecov.io/gh/kubernetes-client/python "Non-generated packages only")
-[![pypi supported versions](https://img.shields.io/pypi/pyversions/kubernetes.svg)](https://pypi.python.org/pypi/kubernetes)
-[![Client Capabilities](https://img.shields.io/badge/Kubernetes%20client-Silver-blue.svg?style=flat&colorB=C0C0C0&colorA=306CE8)](http://bit.ly/kubernetes-client-capabilities-badge)
-[![Client Support Level](https://img.shields.io/badge/kubernetes%20client-beta-green.svg?style=flat&colorA=306CE8)](http://bit.ly/kubernetes-client-support-badge)
+## Project chosen
 
-Python client for the [kubernetes](http://kubernetes.io/) API.
+Name: Kubernetes
 
-## Installation
+URL: https://github.com/kubernetes-client/python
 
-From source:
+Number of lines of code and the tool used to count it: 140,856 counted with Lizard
 
-```
-git clone --recursive https://github.com/kubernetes-client/python.git
-cd python
-python setup.py install
-```
+Programming language: Python
 
-From [PyPI](https://pypi.python.org/pypi/kubernetes/) directly:
+## Coverage measurement
 
-```
-pip install kubernetes
-```
+### Existing tool
 
-## Examples
+<Inform the name of the existing tool that was executed and how it was executed>
 
-list all pods:
+<Show the coverage results provided by the existing tool with a screenshot>
+The coverage tool used by everyone in the group was Coverage.py. Every group member downloaded it on their devices and followed the guide provided on https://coverage.readthedocs.io/en/7.5.3/. After the Kubernetes program was downloaded, a branch test would be run to see the coverage of all tests. The figure below shows the code used and initial coverage that every group member got.  
+<br/><br/>  
 
-```python
-from kubernetes import client, config
+![initial coverage](https://i.ibb.co/Jky0PS5/Figure-1.png "initial coverage")
 
-# Configs can be set in Configuration class directly or using helper utility
-config.load_kube_config()
-
-v1 = client.CoreV1Api()
-print("Listing pods with their IPs:")
-ret = v1.list_pod_for_all_namespaces(watch=False)
-for i in ret.items:
-    print("%s\t%s\t%s" % (i.status.pod_ip, i.metadata.namespace, i.metadata.name))
-```
-
-watch on namespace object:
-
-```python
-from kubernetes import client, config, watch
-
-# Configs can be set in Configuration class directly or using helper utility
-config.load_kube_config()
-
-v1 = client.CoreV1Api()
-count = 10
-w = watch.Watch()
-for event in w.stream(v1.list_namespace, _request_timeout=60):
-    print("Event: %s %s" % (event['type'], event['object'].metadata.name))
-    count -= 1
-    if not count:
-        w.stop()
-
-print("Ended.")
-```
-
-More examples can be found in [examples](examples/) folder. To run examples, run this command:
-
-```shell
-python -m examples.example1
-```
-
-(replace example1 with one of the filenames in the examples folder)
-
-## Documentation
-
-All APIs and Models' documentation can be found at the [Generated client's README file](kubernetes/README.md)
-
-## Compatibility
-
-`client-python` follows [semver](http://semver.org/), so until the major version of
-client-python gets increased, your code will continue to work with explicitly
-supported versions of Kubernetes clusters.
-
-#### Compatibility matrix of supported client versions
-
-- [client 9.y.z](https://pypi.org/project/kubernetes/9.0.1/): Kubernetes 1.12 or below (+-), Kubernetes 1.13 (✓), Kubernetes 1.14 or above (+-)
-- [client 10.y.z](https://pypi.org/project/kubernetes/10.1.0/): Kubernetes 1.13 or below (+-), Kubernetes 1.14 (✓), Kubernetes 1.14 or above (+-)
-- [client 11.y.z](https://pypi.org/project/kubernetes/11.0.0/): Kubernetes 1.14 or below (+-), Kubernetes 1.15 (✓), Kubernetes 1.16 or above (+-)
-- [client 12.y.z](https://pypi.org/project/kubernetes/12.0.1/): Kubernetes 1.15 or below (+-), Kubernetes 1.16 (✓), Kubernetes 1.17 or above (+-)
-- [client 17.y.z](https://pypi.org/project/kubernetes/17.17.0/): Kubernetes 1.16 or below (+-), Kubernetes 1.17 (✓), Kubernetes 1.18 or above (+-)
-- [client 18.y.z](https://pypi.org/project/kubernetes/18.20.0/): Kubernetes 1.17 or below (+-), Kubernetes 1.18 (✓), Kubernetes 1.19 or above (+-)
-- [client 19.y.z](https://pypi.org/project/kubernetes/19.15.0/): Kubernetes 1.18 or below (+-), Kubernetes 1.19 (✓), Kubernetes 1.20 or above (+-)
-- [client 20.y.z](https://pypi.org/project/kubernetes/20.13.0/): Kubernetes 1.19 or below (+-), Kubernetes 1.20 (✓), Kubernetes 1.21 or above (+-)
-- [client 21.y.z](https://pypi.org/project/kubernetes/21.7.0/): Kubernetes 1.20 or below (+-), Kubernetes 1.21 (✓), Kubernetes 1.22 or above (+-)
-- [client 22.y.z](https://pypi.org/project/kubernetes/22.6.0/): Kubernetes 1.21 or below (+-), Kubernetes 1.22 (✓), Kubernetes 1.23 or above (+-)
-- [client 23.y.z](https://pypi.org/project/kubernetes/23.6.0/): Kubernetes 1.22 or below (+-), Kubernetes 1.23 (✓), Kubernetes 1.24 or above (+-)
-- [client 24.y.z](https://pypi.org/project/kubernetes/24.2.0/): Kubernetes 1.23 or below (+-), Kubernetes 1.24 (✓), Kubernetes 1.25 or above (+-)
-- [client 25.y.z](https://pypi.org/project/kubernetes/25.3.0/): Kubernetes 1.24 or below (+-), Kubernetes 1.25 (✓), Kubernetes 1.26 or above (+-)
-- [client 26.y.z](https://pypi.org/project/kubernetes/26.1.0/): Kubernetes 1.25 or below (+-), Kubernetes 1.26 (✓), Kubernetes 1.27 or above (+-)
-- [client 27.y.z](https://pypi.org/project/kubernetes/27.2.0/): Kubernetes 1.26 or below (+-), Kubernetes 1.27 (✓), Kubernetes 1.28 or above (+-)
-- [client 28.y.z](https://pypi.org/project/kubernetes/28.1.0/): Kubernetes 1.27 or below (+-), Kubernetes 1.28 (✓), Kubernetes 1.29 or above (+-)
-- [client 29.y.z](https://pypi.org/project/kubernetes/29.0.0/): Kubernetes 1.28 or below (+-), Kubernetes 1.29 (✓), Kubernetes 1.30 or above (+-)
-- [client 30.y.z](https://pypi.org/project/kubernetes/30.1.0b1/): Kubernetes 1.29 or below (+-), Kubernetes 1.30 (✓), Kubernetes 1.31 or above (+-)
+Figure 1: Coverage results before any tests implemented
 
 
-> See [here](#homogenizing-the-kubernetes-python-client-versions) for an explanation of why there is no v13-v16 release.
+### Your own coverage tool
 
-Key:
+<The following is supposed to be repeated for each group member>
 
-* `✓` Exactly the same features / API objects in both client-python and the Kubernetes
-  version.
-* `+` client-python has features or API objects that may not be present in the Kubernetes
- cluster, either due to that client-python has additional new API, or that the server has
- removed old API. However, everything they have in common (i.e., most APIs) will work.
- Please note that alpha APIs may vanish or change significantly in a single release.
-* `-` The Kubernetes cluster has features the client-python library can't use, either due
- to the server has additional new API, or that client-python has removed old API. However,
- everything they share in common (i.e., most APIs) will work.
+Name: Samuel
 
-See the [CHANGELOG](./CHANGELOG.md) for a detailed description of changes
-between client-python versions.
+Function 1: “__str__”
 
-| Client version  | Canonical source for OpenAPI spec    | Maintenance status            |
-|-----------------|--------------------------------------|-------------------------------|
-| 5.0 Alpha/Beta  | Kubernetes main repo, 1.9 branch     | ✗                             |
-| 5.0             | Kubernetes main repo, 1.9 branch     | ✗                             |
-| 6.0 Alpha/Beta  | Kubernetes main repo, 1.10 branch    | ✗                             |
-| 6.0             | Kubernetes main repo, 1.10 branch    | ✗                             |
-| 7.0 Alpha/Beta  | Kubernetes main repo, 1.11 branch    | ✗                             |
-| 7.0             | Kubernetes main repo, 1.11 branch    | ✗                             |
-| 8.0 Alpha/Beta  | Kubernetes main repo, 1.12 branch    | ✗                             |
-| 8.0             | Kubernetes main repo, 1.12 branch    | ✗                             |
-| 9.0 Alpha/Beta  | Kubernetes main repo, 1.13 branch    | ✗                             |
-| 9.0             | Kubernetes main repo, 1.13 branch    | ✗                             |
-| 10.0 Alpha/Beta | Kubernetes main repo, 1.14 branch    | ✗                             |
-| 10.0            | Kubernetes main repo, 1.14 branch    | ✗                             |
-| 11.0 Alpha/Beta | Kubernetes main repo, 1.15 branch    | ✗                             |
-| 11.0            | Kubernetes main repo, 1.15 branch    | ✗                             |
-| 12.0 Alpha/Beta | Kubernetes main repo, 1.16 branch    | ✗                             |
-| 12.0            | Kubernetes main repo, 1.16 branch    | ✗                             |
-| 17.0 Alpha/Beta | Kubernetes main repo, 1.17 branch    | ✗                             |
-| 17.0            | Kubernetes main repo, 1.17 branch    | ✗                             |
-| 18.0 Alpha/Beta | Kubernetes main repo, 1.18 branch    | ✗                             |
-| 18.0            | Kubernetes main repo, 1.18 branch    | ✗                             |
-| 19.0 Alpha/Beta | Kubernetes main repo, 1.19 branch    | ✗                             |
-| 19.0            | Kubernetes main repo, 1.19 branch    | ✗                             |
-| 20.0 Alpha/Beta | Kubernetes main repo, 1.20 branch    | ✗                             |
-| 20.0            | Kubernetes main repo, 1.20 branch    | ✗                             |
-| 21.0 Alpha/Beta | Kubernetes main repo, 1.21 branch    | ✗                             |
-| 21.0            | Kubernetes main repo, 1.21 branch    | ✗                             |
-| 22.0 Alpha/Beta | Kubernetes main repo, 1.22 branch    | ✗                             |
-| 22.0            | Kubernetes main repo, 1.22 branch    | ✗                             |
-| 23.0 Alpha/Beta | Kubernetes main repo, 1.23 branch    | ✗                             |
-| 23.0            | Kubernetes main repo, 1.23 branch    | ✗                             |
-| 24.0 Alpha/Beta | Kubernetes main repo, 1.24 branch    | ✗                             |
-| 24.0            | Kubernetes main repo, 1.24 branch    | ✗                             |
-| 25.0 Alpha/Beta | Kubernetes main repo, 1.25 branch    | ✗                             |
-| 25.0            | Kubernetes main repo, 1.25 branch    | ✗                             |
-| 26.0 Alpha/Beta | Kubernetes main repo, 1.26 branch    | ✗                             |
-| 26.0            | Kubernetes main repo, 1.26 branch    | ✗                             |
-| 27.0 Alpha/Beta | Kubernetes main repo, 1.27 branch    | ✗                             |
-| 27.0            | Kubernetes main repo, 1.27 branch    | ✓                             |
-| 28.0 Alpha/Beta | Kubernetes main repo, 1.28 branch    | ✗                             |
-| 28.0            | Kubernetes main repo, 1.28 branch    | ✓                             |
-| 29.0 Alpha/Beta | Kubernetes main repo, 1.29 branch    | ✗                             |
-| 29.0            | Kubernetes main repo, 1.29 branch    | ✓                             |
-| 30.0 Alpha/Beta | Kubernetes main repo, 1.30 branch    | ✓                             |
 
-> See [here](#homogenizing-the-kubernetes-python-client-versions) for an explanation of why there is no v13-v16 release.
+Patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements:
 
-Key:
+https://github.com/samuelbown/kubernetes-python-client-/commit/01f1e191d0396d937b2ecd63dec424571fee44c6
 
-* `✓` Changes in main Kubernetes repo are manually ([should be automated](https://github.com/kubernetes-client/python/issues/177)) published to client-python when they are available.
-* `✗` No longer maintained; please upgrade.
 
-Kubernetes supports [three minor releases](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/release/versioning.md#supported-releases-and-component-skew) at a time. "Support" means we expect users to be running that version in production, though we may not port fixes back before the latest minor version. For example, when v1.3 comes out, v1.0 will no longer be supported. In consistent with Kubernetes support policy, we expect to support **three GA major releases** (corresponding to three Kubernetes minor releases) at a time.
 
-Note: There would be no maintenance for alpha/beta releases except the latest one.
+![fig2](https://i.imghippo.com/files/OCaa71719500198.png "fig2")
 
-**Exception to the above support rule:** Since we are running behind on releases, we will support Alpha/Beta releases for a greater number of clients until we catch up with the upstream version.
+Figure 2: Coverage tool results for __str__
 
-## Homogenizing the Kubernetes Python Client versions
+Function 2: “to_dict”
 
-The client releases v12 and before following a versioning schema where the major version was 4 integer positions behind the Kubernetes minor on which the client is based on. For example, v12.0.0 is based on Kubernetes v1.16, v11.0.0 is based on Kubernetes v1.15 and so on.
+Patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements:
 
-This created a lot of confusion tracking two different version numbers for each client release. It was decided to homogenize the version scheme starting from the Kubernetes Python client based on Kubernetes v1.17. The versioning scheme of the client from this release would be vY.Z.P where Y and Z are the Kubernetes minor and patch release numbers from Kubernets v1.Y.Z and P is the client specific patch release numbers to accommodate changes and fixes done specifically to the client. For more details, refer [this issue](https://github.com/kubernetes-client/python/issues/1244).
+https://github.com/samuelbown/kubernetes-python-client-/commit/ed7734564a1c1e242926f01c7e1bc15a701dae55
 
-## Community, Support, Discussion
+<img src="https://i.ibb.co/JKDtRZq/figure3.png" width="350" height="500">
 
-If you have any problem on using the package or any suggestions, please start with reaching the [Kubernetes clients slack channel](https://kubernetes.slack.com/messages/C76GB48RK/), or filing an [issue](https://github.com/kubernetes-client/python/issues) to let us know. You can also reach the maintainers of this project at [SIG API Machinery](https://github.com/kubernetes/community/tree/master/sig-api-machinery), where this project falls under.
 
-### Code of Conduct
 
-Participation in the Kubernetes community is governed by the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/master/code-of-conduct.md).
+Figure 3: Coverage tool results for to_dict
 
-## Troubleshooting
+Name: Andreas
 
-### SSLError on macOS
+Function 1: ApiException “__Init__”
 
-If you get an SSLError, you likely need to update your version of python. The
-version that ships with macOS may not be supported.
+Patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements:
 
-Install the latest version of python with [brew](https://brew.sh/):
+https://github.com/samuelbown/kubernetes-python-client-/commit/8c1af89670033b8a97f642e01d10c742302cc8ae
 
-```
-brew install python
-```
+![fig4](https://i.ibb.co/pnT20fx/figure-4.png "fig4")
 
-Once installed, you can query the version of OpenSSL like so:
+Figure 4: Coverage tool results for __Init__
 
-```
-python -c "import ssl; print (ssl.OPENSSL_VERSION)"
-```
+Function 2: DynamicApiError “__str__”
 
-You'll need a version with OpenSSL version 1.0.0 or later.
+Patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements:
 
-### Hostname doesn't match
+https://github.com/samuelbown/kubernetes-python-client-/commit/b42215a95b4495f2a5815f013bb77e87aaf8785e
 
-If you get an `ssl.CertificateError` complaining about hostname match, your installed packages does not meet version [requirements](requirements.txt).
-Specifically check `ipaddress` and `urllib3` package versions to make sure they met requirements in [requirements.txt](requirements.txt) file.
+![fig5](https://i.ibb.co/nbrJ6ws/figure-5.png "fig5")
 
-### Why Exec/Attach calls doesn't work
+Figure 5: Coverage tool results for __str__
 
-Starting from 4.0 release, we do not support directly calling exec or attach calls. you should use stream module to call them. so instead
-of `resp = api.connect_get_namespaced_pod_exec(name, ...` you should call `resp = stream(api.connect_get_namespaced_pod_exec, name, ...`.
+Name: Amelia
 
-Using Stream will overwrite the requests protocol in _core_v1_api.CoreV1Api()_
-This will cause a failure in  non-exec/attach calls. If you reuse your api client object, you will need to
-recreate it between api calls that use _stream_ and other api calls.
+Function 1: V1ComponentStatus“__init__”
 
-See more at [exec example](examples/pod_exec.py).
+Patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements:
 
-**[⬆ back to top](#Installation)**
+https://github.com/samuelbown/kubernetes-python-client-/commit/1008bc2f0437fa5d7c7cdcf9daa597c95c4d528e
+
+![fig6](https://i.ibb.co/WBSpPK1/figure-6.png "fig6")
+
+Figure 6: Coverage tool results for __init__
+
+
+Function 2: V2MetricTarget “__init__”
+
+
+Patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements:
+
+https://github.com/samuelbown/kubernetes-python-client-/blob/master/kubernetes/client/models/v2_metric_target.py
+
+![fig7](https://i.ibb.co/GR4899n/figure-7.png "fig7")
+
+Figure 7: Coverage tool results for __init__
+
+Name: Chirag
+
+Function 1: ApiException “__init__”
+
+Patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements:
+
+https://github.com/samuelbown/kubernetes-python-client-/commit/7afea5a19169b195e2c7b19a37586b2bbd608e68
+
+
+![fig8](https://i.imghippo.com/files/eUX9c1719500597.png "fig8")
+
+Figure 8: Coverage tool results for __init__
+
+
+Function 2: Configuration “get_api_key_with_prefix”
+
+
+Patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements:
+
+https://github.com/samuelbown/kubernetes-python-client-/commit/2ee7e8d9765268a1f56beb84d393b7fd1f63846c
+
+![fig9](https://i.ibb.co/HFzZyyw/figure-9.png "fig9")
+
+Figure 9: Coverage tool results for get_api_key_with_prefix
+
+
+
+## Coverage improvement
+
+### Individual tests
+
+
+Name: Samuel
+
+1. ApiException “__str__” Tests:
+
+Patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test:
+
+https://github.com/samuelbown/kubernetes-python-client-/commit/a26c32b55d396dea17b34366f521be52d8bf1182
+
+![fig10](https://i.ibb.co/thM0kZ6/figure-10.png "fig10")
+
+Figure 10: Coverage results before the __str__ tests were implemented
+
+![fig11](https://i.ibb.co/zJKHz3c/figure-11.png "fig11")
+
+Figure 11: Coverage results after the __str__ tests were implemented
+
+
+As seen in the images, by adding tests, the coverage has improved by 7% in test_client.py. The cause of the percentage changes in the other tests is unknown but is also not relevant to this test in particular. After looking into it, we assumed this is some issue with Coverage.py because we have been encountering some problems with it while working on the assignment. The function that was tested had two if-statements as the possible branches, therefore the tests consisted of all combinations of whether they were entered or not.
+
+
+
+2. Version Info “to_dict” Tests:
+
+Patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test:
+
+https://github.com/samuelbown/kubernetes-python-client-/commit/d7bc4d90959daef3ec7a51f93a8cc7c9b29dd4ec
+
+![fig12](https://i.ibb.co/tQXXG3r/figure-12.png "fig12")
+
+Figure 12: Coverage results before the to_dict tests were implemented
+
+![fig13](https://i.ibb.co/jfjFDMT/figure-13.png "fig13")
+
+Figure 13: Coverage results after the to_dict tests were implemented
+
+
+These tests have increased the coverage of the test_client.py file by 6%. The function being tested consisted of 1 if-statement with 4 different branches, so there were tests for each of those branches being executed.
+
+Name: Andreas
+
+1. ApiException “__init__” Tests:
+
+Patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test:
+
+https://github.com/samuelbown/kubernetes-python-client-/commit/9de3209f0f21938a0e799918cd77282a54b014b5
+
+![fig14](https://i.ibb.co/4sN06Zy/figure-14.png "fig14")
+
+Figure 14: Coverage results before the __init__ tests were implemented
+
+![fig15](https://i.ibb.co/GRvm41c/figure-15.png "fig15")
+
+Figure 15: Coverage results after the __init__ tests were implemented
+
+
+The coverage of test_client, where the test is, has increased by 3%. There was an if and else statement in the function, so 2 branches that were not covered before now are.
+
+2. DynamicApiError “__str__” Tests:
+
+Patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test:
+
+https://github.com/samuelbown/kubernetes-python-client-/commit/fd1d1f756f8dddb4d8950b2d30b2a44e2c9a6cd3
+
+![fig16](https://i.ibb.co/YXsdqhn/figure-16.png "fig16")
+
+Figure 16: Coverage results before the __str__ tests were implemented
+
+![fig17](https://i.ibb.co/QNkn6R1/figure-17.png "fig17")
+
+Figure 17: Coverage results after the __str__ tests were implemented
+
+
+By adding tests to the str function from the DynamicApiError class, 3 if statements, and thus 3 branches, which were not covered before now are, the function is fully covered and the overall coverage of dynamic/test_client has gone up by 4%
+
+
+Name: Amelia
+
+1. v1_component_status Tests "__init__":
+
+Patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test:
+
+https://github.com/samuelbown/kubernetes-python-client-/commit/4d11ddfc34f9d249c77a0efc6a6320714f401014
+
+![fig18](https://i.ibb.co/fVWqW3V/figure-18.png "fig18")
+
+Figure 18: Coverage results before the __init__ tests were implemented
+
+![fig19](https://i.ibb.co/Wn37VrT/figure-19.png "fig19")
+
+Figure 19:Coverage results after the __init__ tests were implemented
+
+Through the implementation of this test for the v1_component_status "__init__" function, there was a 8% increase in coverage of test_client.py this was due to there being  5 if statements that were not covered previously.
+
+
+2. v2_metric_target "__init__" Tests:
+
+Patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test:
+
+https://github.com/samuelbown/kubernetes-python-client-/commit/4d11ddfc34f9d249c77a0efc6a6320714f401014
+
+![fig20](https://i.ibb.co/2hJ5qF3/figure-20.png "fig20")
+
+Figure 20: Coverage results before the __init__ tests were implemented
+
+![fig21](https://i.imghippo.com/files/oLipw1719500664.png "fig21")
+
+Figure 21: Coverage results after the __init__ tests were implemented
+
+Through the implementation of this test for the v2_metric_target "__init__" function, there was a 5% increase in coverage of test_client.py this was due to there being 4 branches that were previously not covered by the tests.
+
+
+Name: Chirag
+
+1. AdmissionregistrationV1ServiceReference “__init__” Tests:
+
+Patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test:
+
+https://github.com/samuelbown/kubernetes-python-client-/commit/b5d7eeca2dcba878fc26a7b756f2c0978e7e7af6
+
+![fig22](https://i.ibb.co/BnN7yTn/figure-22.png "fig22")
+
+Figure 22: Coverage results before the __init__ tests were implemented
+
+![fig23](https://i.ibb.co/hHQpcS0/figure-23.png "fig23")
+
+Figure 22: Coverage results after the __init__ tests were implemented
+
+The function chosen had 3 “if” statements which weren’t covered. Hence by implementing tests those branches were covered thus the 9% coverage increase in test_client.py.
+
+2. Configuration “get_api_key_with_prefix” Tests:
+
+Patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test:
+
+https://github.com/samuelbown/kubernetes-python-client-/commit/b5d7eeca2dcba878fc26a7b756f2c0978e7e7af6
+
+![fig24](https://i.ibb.co/BnN7yTn/figure-22.png "fig24")
+
+Figure 24: Coverage results before the get_api_key_with_prefix tests were implemented
+
+![fig25](https://i.ibb.co/8Dr2XxH/figure-25.png "fig25")
+
+Figure 25: Coverage results after the get_api_key_with_prefix tests were implemented
+
+This function had 2 if statements, one of them containing a separate if-else statement. By implementing the tests all the possible branches were covered, increasing the branch coverage by 7%.
+
+
+### Overall
+
+Old coverage results:
+![initial coverage](https://i.ibb.co/Jky0PS5/Figure-1.png "initial coverage")
+
+Figure 26: Coverage results with no tests implemented
+
+New coverage results:
+![fig27](https://i.ibb.co/1vkTRb8/figure-27.png "fig27")
+
+Figure 27: Coverage results with all tests implemented
+## Statement of individual contributions
+
+
+Samuel: Worked on my part 1 and 2 of the assignment by instrumenting a function to check the branch coverage and making tests to try and increase the coverage. Created the GitHub and helped format the document.
+
+Andreas:instrumented 2 functions for part 1 of the assignment and made tests for them in part 2.
+
+Amelia: Helped install and use coverage.py and worked on my assigned part 1 and 2, increasing coverage for 2 functions, and creating my own coverage tool to check them. 
+
+Chirag: Implemented the coverage tests and increased coverage for my 2 functions as well as contributed in writing the document.
+
+All in all, everyone in the group was striving for an even amount of work. We were communicating constantly, whether that be planning when we wanted to finish certain parts of the assignment or helping each other with issues. We also all cooperated on creating the README file. 

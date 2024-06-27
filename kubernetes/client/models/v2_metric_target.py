@@ -46,9 +46,31 @@ class V2MetricTarget(object):
         'value': 'value'
     }
 
+    branch_coverage = {
+        "average_utilization": False,
+        "average_value": False,
+        "value": False,
+        "local_vars": False
+    }
+
+    def reset_branches(self):
+        self.branch_coverage["average_utilization"]=False
+        self.branch_coverage["average_value"]=False
+        self.branch_coverage["value"]=False
+        self.branch_coverage["local_vars"]=False
+
+    def print_branches(self):
+        for branch in self.branch_coverage.items():
+            if (branch[1] == True):
+                print(f"{branch[0]} branch was executed")
+            else :
+                print(f"{branch[0]} branch was not executed")
+
+        print("\n")
     def __init__(self, average_utilization=None, average_value=None, type=None, value=None, local_vars_configuration=None):  # noqa: E501
         """V2MetricTarget - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
+            self.branch_coverage["local_vars"]=True
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
@@ -59,11 +81,14 @@ class V2MetricTarget(object):
         self.discriminator = None
 
         if average_utilization is not None:
+            self.branch_coverage["average_utilization"]=True
             self.average_utilization = average_utilization
         if average_value is not None:
+            self.branch_coverage["average_value"]=True
             self.average_value = average_value
         self.type = type
         if value is not None:
+            self.branch_coverage["value"]=True
             self.value = value
 
     @property
@@ -205,3 +230,11 @@ class V2MetricTarget(object):
             return True
 
         return self.to_dict() != other.to_dict()
+
+temp = V2MetricTarget
+V2MetricTarget.__init__(temp,None,None,None,None,Configuration())
+temp.print_branches(temp)
+
+temp = V2MetricTarget
+V2MetricTarget.__init__(temp,"average_utilization","average_value","type","value",None)
+temp.print_branches(temp)

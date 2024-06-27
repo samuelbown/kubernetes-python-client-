@@ -13,6 +13,25 @@
 import six
 
 
+class TestStr():
+    __test__ = False
+
+    branch_coverage = {
+        "headers": False,
+        "body": False
+    }
+    
+    def print_branches(self):
+        for branch in self.branch_coverage.items():
+            if (branch[1] == True):
+                print(f"{branch[0]} was executed")
+            else :
+                print(f"{branch[0]} was not executed")
+
+    def reset_branches(self):
+        self.branch_coverage["headers"] = False
+        self.branch_coverage["body"] = False
+
 class OpenApiException(Exception):
     """The base exception class for all OpenAPIExceptions"""
 
@@ -96,59 +115,15 @@ class ApiException(OpenApiException):
             self.body = None
             self.headers = None
 
-def __str__(self):
-    """Custom error messages for exception"""
-    error_message = "({0})\n"\
-                    "Reason: {1}\n".format(self.status, self.reason)
-    
-    if self.headers:
-        branch_coverage["headers"] = True
-        error_message += "HTTP response headers: {0}\n".format(
-            self.headers)
-
-    if self.body:
-        branch_coverage["body"] = True
-        error_message += "HTTP response body: {0}\n".format(self.body)
-
-    return error_message
-
-branch_coverage = {
-        "headers": False,  
-        "body": False  
-    }
-
-def print_branches():
-    for branch in branch_coverage.items():
-        if(branch[1] == True):
-            print(f"{branch[0]} branch was executed")
-        else:
-            print(f"{branch[0]} branch was not executed")
-    print("\n")
-    branch_coverage["headers"] = False
-    branch_coverage["body"] = False
-
-
-class TestStr(Exception):
-    __test__ = False
-
-    branch_coverage = {
-        "headers": False,
-        "body": False
-    }
-
-    def __init__(self, status, reason, headers=None, body=None):
-        self.status = status
-        self.reason = reason
-        self.headers = headers
-        self.body = body
-
     def __str__(self):
         """Custom error messages for exception"""
-        error_message = "({0})\nReason: {1}\n".format(self.status, self.reason)
-
+        error_message = "({0})\n"\
+                        "Reason: {1}\n".format(self.status, self.reason)
+        
         if self.headers:
             TestStr.branch_coverage["headers"] = True
-            error_message += "HTTP response headers: {0}\n".format(self.headers)
+            error_message += "HTTP response headers: {0}\n".format(
+                self.headers)
 
         if self.body:
             TestStr.branch_coverage["body"] = True
@@ -156,21 +131,15 @@ class TestStr(Exception):
 
         return error_message
     
-def reset_branches():
-    TestStr.branch_coverage["headers"] = False
-    TestStr.branch_coverage["body"] = False
-
-def render_path(path_to_item):
-    """Returns a string representation of a path"""
-    result = ""
-    for pth in path_to_item:
-        if isinstance(pth, six.integer_types):
-            result += "[{0}]".format(pth)
-        else:
-            result += "['{0}']".format(pth)
-    return result
-
-
+    def render_path(path_to_item):
+        """Returns a string representation of a path"""
+        result = ""
+        for pth in path_to_item:
+            if isinstance(pth, six.integer_types):
+                result += "[{0}]".format(pth)
+            else:
+                result += "['{0}']".format(pth)
+        return result
 
 class testResponse():
 
@@ -204,16 +173,3 @@ class testApiExceptionInit(OpenApiException):
             self.reason = reason
             self.body = None
             self.headers = None
-
-    def print_branches():
-        for branch in testApiExceptionInit.branch_coverage.items():
-            if (branch[1] == True):
-                print(f"{branch[0]} was executed")
-            else :
-                print(f"{branch[0]} was not executed")
-
-    def reset_branches():
-        testApiExceptionInit.branch_coverage["first"] = False
-        testApiExceptionInit.branch_coverage["second"] = False
-
-

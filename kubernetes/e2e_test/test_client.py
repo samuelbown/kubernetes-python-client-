@@ -24,6 +24,8 @@ import io
 import gzip
 
 from kubernetes.client.configuration import Configuration, TestGetApiWithKey
+from kubernetes.client.models.version_info import TestToDict
+from kubernetes.client.exceptions import TestStr
 from kubernetes.client import api_client
 from kubernetes.client.api import core_v1_api
 from kubernetes.e2e_test import base
@@ -612,6 +614,112 @@ class TestClient(unittest.TestCase):
             self.assertTrue(len(node.metadata.labels) > 0)
             self.assertTrue(isinstance(node.metadata.labels, dict))
 
+class TestTo_Dict(unittest.TestCase):
+    def test_first(self): # test if the object has a list
+        verinfo = VersionInfo(build_date="1", compiler=1, git_commit=1, git_tree_state=1, git_version=1, go_version=1, major=1, minor=1, platform=1)
+        verinfo.openapi_types={"list": ["abc", "def"]}
+        verinfo.list=["abc", "def"]
+        verinfo.to_dict
+        temp = TestToDict()
+        verinfo.to_dict()
+        self.assertTrue(temp.branch_coverage["first"])
+        self.assertFalse(temp.branch_coverage["second"])
+        self.assertFalse(temp.branch_coverage["third"])
+        self.assertFalse(temp.branch_coverage["fourth"])
+        temp.print_branches()
+        temp.reset_branches()
+
+    def test_second(self):
+        class temp_to_dict: # test if the object has a to_dict function
+            def to_dict(self):
+                return {"temp": "hello"}
+        verinfo = VersionInfo(build_date="1", compiler=1, git_commit=1, git_tree_state=1, git_version=1, go_version=1, major=1, minor=1, platform=1)
+        verinfo.openapi_types={"temp_to_dict": "to_dict"}
+        verinfo.list=["abc", "def"]
+        verinfo.temp_to_dict=temp_to_dict()
+        verinfo.to_dict()
+        temp = TestToDict()
+
+        self.assertFalse(temp.branch_coverage["first"])
+        self.assertTrue(temp.branch_coverage["second"])
+        self.assertFalse(temp.branch_coverage["third"])
+        self.assertFalse(temp.branch_coverage["fourth"])
+        temp.print_branches()
+        temp.reset_branches()
+
+    def test_third(self): # test if the object has a dict structure
+        verinfo = VersionInfo(build_date="1", compiler=1, git_commit=1, git_tree_state=1, git_version=1, go_version=1, major=1, minor=1, platform=1)
+        verinfo.openapi_types={"openapi_types": "test"}
+        verinfo.to_dict()
+        temp = TestToDict()
+
+        self.assertFalse(temp.branch_coverage["first"])
+        self.assertFalse(temp.branch_coverage["second"])
+        self.assertTrue(temp.branch_coverage["third"])
+        self.assertFalse(temp.branch_coverage["fourth"])
+        temp.print_branches()
+        temp.reset_branches()
+
+    def test_fourth(self): # test if the object has none of the above
+        verinfo = VersionInfo(build_date="1", compiler=1, git_commit=1, git_tree_state=1, git_version=1, go_version=1, major=1, minor=1, platform=1)
+        verinfo.item="hello"
+        verinfo.openapi_types={"item": "hello!"}
+        verinfo.to_dict()
+        temp = TestToDict()
+
+        self.assertFalse(temp.branch_coverage["first"])
+        self.assertFalse(temp.branch_coverage["second"])
+        self.assertFalse(temp.branch_coverage["third"])
+        self.assertTrue(temp.branch_coverage["fourth"])
+        temp.print_branches()
+        temp.reset_branches()
+
+class Test_Str(unittest.TestCase):
+
+    def test_headers_and_body(self): # test if headers and body exist
+        api = ApiException(status=None, reason=None, http_resp=None)
+        api.headers = "headers"
+        api.body = "body"
+        api.__str__()
+        temp = TestStr()
+        self.assertTrue(temp.branch_coverage["headers"])
+        self.assertTrue(temp.branch_coverage["body"])
+        temp.print_branches()
+        temp.reset_branches()
+
+    def test_only_headers(self): # test if only headers exists
+        api = ApiException(status=None, reason=None, http_resp=None)
+        api.headers = "headers"
+        api.body = None
+        api.__str__()
+        temp = TestStr()
+        self.assertTrue(temp.branch_coverage["headers"])
+        self.assertFalse(temp.branch_coverage["body"])
+        temp.print_branches()
+        temp.reset_branches()
+
+    def test_only_body(self): # test if only body exists
+        api = ApiException(status=None, reason=None, http_resp=None)
+        api.headers = None
+        api.body = "body"
+        api.__str__()
+        temp = TestStr()
+        self.assertFalse(temp.branch_coverage["headers"])
+        self.assertTrue(temp.branch_coverage["body"])
+        temp.print_branches()
+        temp.reset_branches()
+
+    def test_neither_headers_nor_body(self): # test if neither exists
+        api = ApiException(status=None, reason=None, http_resp=None)
+        api.headers = None
+        api.body = None
+        api.__str__()
+        temp = TestStr()
+        self.assertFalse(temp.branch_coverage["headers"])
+        self.assertFalse(temp.branch_coverage["body"])
+        temp.print_branches()
+        temp.reset_branches()
+
 class TestAdmission(unittest.TestCase):
     def test_no_branches_taken(self):
         AdmissionregistrationV1ServiceReference(name="", namespace="", path=None, port=None, local_vars_configuration=Configuration())
@@ -707,8 +815,6 @@ class TestApi(unittest.TestCase):
         self.assertTrue(temp.branch_coverage["else"])
         temp.print_branches()
         temp.reset_branches() 
-
-
 
 
 class V1StatusTests(unittest.TestCase):

@@ -332,6 +332,7 @@ class Configuration(object):
         :param identifier: The identifier of apiKey.
         :return: The token for api key authentication.
         """
+        TestGetApiWithKey.reset_branches(TestGetApiWithKey)
         if self.refresh_api_key_hook is not None:
             print(self.refresh_api_key_hook)
             TestGetApiWithKey.branch_coverage["hook"] = True

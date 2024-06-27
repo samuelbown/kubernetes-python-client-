@@ -25,7 +25,7 @@ import gzip
 
 from kubernetes.client.configuration import Configuration, TestGetApiWithKey
 from kubernetes.client.models.version_info import TestToDict
-from kubernetes.client.exceptions import TestStr
+from kubernetes.client.exceptions import TestStr,ApiException
 from kubernetes.client import api_client
 from kubernetes.client.api import core_v1_api
 from kubernetes.e2e_test import base
@@ -975,6 +975,31 @@ class v2MetricTargetTests(unittest.TestCase):
         self.assertTrue(temp.branch_coverage["value"])
         self.assertTrue(temp.branch_coverage["local_vars"])
 
+
+class testResponse():
+    #used to test ApiExceptionInit
+    status = 1
+    reason = 2
+    data = 3
+
+    def getheaders():
+        return 4
+    
+class TestApiException(unittest.TestCase):
+    #tests __init__
+    def testResponse(self):
+        temp = ApiException(1,2,testResponse)
+        self.assertTrue(temp.branch_coverage["response"])
+        self.assertFalse(temp.branch_coverage["else"])
+
+        temp.print_branches()
+
+    def testElse(self):
+        temp = ApiException(1,2,None)
+        self.assertTrue(temp.branch_coverage["else"])
+        self.assertFalse(temp.branch_coverage["response"])
+
+        temp.print_branches()
 
 
 if __name__ == '__main__':

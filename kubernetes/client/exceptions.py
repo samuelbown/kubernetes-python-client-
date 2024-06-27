@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Kubernetes
 
@@ -101,19 +99,42 @@ class ApiKeyError(OpenApiException, KeyError):
 
 
 
+
+
 class ApiException(OpenApiException):
+    __test__ = False
+
+    branch_coverage = {
+        "response": False,  
+        "second": False  
+    }
 
     def __init__(self, status=None, reason=None, http_resp=None):
         if http_resp:
+            self.branch_coverage["response"] = True
+            self.branch_coverage["else"] = False
             self.status = http_resp.status
             self.reason = http_resp.reason
             self.body = http_resp.data
             self.headers = http_resp.getheaders()
         else:
+            self.branch_coverage["else"] = True
+            self.branch_coverage["response"] = False
             self.status = status
             self.reason = reason
             self.body = None
             self.headers = None
+
+    def print_branches(self):
+        for branch in self.branch_coverage.items():
+            if (branch[1] == True):
+                print(f"{branch[0]} was executed")
+            else :
+                print(f"{branch[0]} was not executed")
+
+    def reset_branches(self):
+        self.branch_coverage["response"] = False
+        self.branch_coverage["else"] = False
 
     def __str__(self):
         """Custom error messages for exception"""
@@ -150,26 +171,12 @@ class testResponse():
     def getheaders():
         return 4
     
-class testApiExceptionInit(OpenApiException):
-    __test__ = False
+temp = ApiException(1,2,testResponse)
+temp.print_branches()
 
-    branch_coverage = {
-        "first": False,  
-        "second": False  
-    }
+temp = ApiException(1,2,None)
+temp.print_branches()
 
-    def __init__(self, status=None, reason=None, http_resp=None):
-        if http_resp:
-            testApiExceptionInit.branch_coverage["first"] = True
-            testApiExceptionInit.branch_coverage["second"] = False
-            self.status = http_resp.status
-            self.reason = http_resp.reason
-            self.body = http_resp.data
-            self.headers = http_resp.getheaders()
-        else:
-            testApiExceptionInit.branch_coverage["second"] = True
-            testApiExceptionInit.branch_coverage["first"] = False
-            self.status = status
-            self.reason = reason
-            self.body = None
-            self.headers = None
+
+
+

@@ -42,6 +42,7 @@ def api_exception(e):
     }.get(e.status, DynamicApiError)(e, tb)
 
 
+
 class DynamicApiError(ApiException):
     """ Generic API Error for the dynamic client """
     branch_coverage = {
@@ -130,51 +131,15 @@ class ServiceUnavailableError(DynamicApiError):
 class ServerTimeoutError(DynamicApiError):
     """ 504: StatusServerTimeout """
 
-class TestDynamicApiErrorStr(ApiException):
-    """ Generic API Error for the dynamic client """
 
-    branch_coverage = {
-        "headers": False,
-        "body": False,
-        "traceback": False,
-    }
-
-    def __init__(self, status=None, reason=None, body=None, headers=None, tb=None):
-        
+class fakeObj():
+    def __init__(self, status,reason,body,headers):
         self.status = status
         self.reason = reason
         self.body = body
         self.headers = headers
-        self.original_traceback = tb
 
-    def __str__(self):
-
-        error_message = [str(self.status), "Reason: {}".format(self.reason)]
-        if self.headers:
-            self.branch_coverage["headers"] = True
-            error_message.append("HTTP response headers: {}".format(self.headers))
-
-        if self.body:
-            self.branch_coverage["body"] = True
-            error_message.append("HTTP response body: {}".format(self.body))
-
-        if self.original_traceback:
-            self.branch_coverage["traceback"] = True
-            error_message.append("Original traceback: \n{}".format(self.original_traceback))
-
-        return '\n'.join(error_message)
-    
-
-
-
-    def print_branches(self):
-
-        for branch in self.branch_coverage.items():
-            if (branch[1] == True):
-                print(f"{branch[0]} was executed")
-            else :
-             print(f"{branch[0]} was not executed")
-        print("\n")
-        self.branch_coverage["headers"] = False
-        self.branch_coverage["body"] = False
-        self.branch_coverage["traceback"] = False
+t = fakeObj(2,3,4,5)
+temp = DynamicApiError(t,1)
+temp.__str__()
+temp.print_branches()
